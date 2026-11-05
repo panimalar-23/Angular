@@ -1,0 +1,138 @@
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">✦</div>
+      <span>focusflow</span>
+    </div>
+
+    <p class="nav-label">YOUR WORKSPACE</p>
+
+    <button class="nav-item" [class.active]="activeFilter === 'All'"
+      (click)="setFilter('All')">▦ &nbsp; My Tasks</button>
+
+    <button class="nav-item" [class.active]="activeFilter === 'Pending'"
+      (click)="setFilter('Pending')">◷ &nbsp; Pending</button>
+
+    <button class="nav-item" [class.active]="activeFilter === 'Completed'"
+      (click)="setFilter('Completed')">✓ &nbsp; Completed</button>
+
+    <div class="sidebar-bottom">
+      <div class="avatar">S</div>
+      <div><strong>My Workspace</strong><small>Personal account</small></div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <span>Workspace / <strong>My Tasks</strong></span>
+      <span class="top-badge">✦ Make today count</span>
+    </header>
+
+    <section class="welcome">
+      <p class="eyebrow">YOUR PERSONAL DASHBOARD</p>
+      <h1>Make today <span>count.</span></h1>
+      <p class="subtitle">Small steps every day lead to big results.</p>
+    </section>
+
+    <section class="stats">
+      <article class="stat-card">
+        <div class="stat-icon purple">▦</div>
+        <p>Total tasks</p>
+        <h2>{{ tasks.length }}</h2>
+        <small>In your workspace</small>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-icon green">✓</div>
+        <p>Completed</p>
+        <h2>{{ completedCount }}</h2>
+        <small>Look at you go!</small>
+      </article>
+
+      <article class="stat-card">
+        <div class="stat-icon orange">◷</div>
+        <p>Still to do</p>
+        <h2>{{ tasks.length - completedCount }}</h2>
+        <small>One step at a time</small>
+      </article>
+    </section>
+
+    <section class="progress-card">
+      <div class="progress-heading">
+        <div>
+          <p class="eyebrow">DAILY PROGRESS</p>
+          <h3>You're making progress!</h3>
+        </div>
+        <strong>{{ progress }}%</strong>
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-fill" [style.width.%]="progress"></div>
+      </div>
+
+      <p class="progress-note">
+        {{ completedCount }} of {{ tasks.length }} tasks completed.
+        Keep going!
+      </p>
+    </section>
+
+    <section class="tasks-section">
+      <div class="section-heading">
+        <div>
+          <h2>Your tasks</h2>
+          <p>Everything you need to get done.</p>
+        </div>
+
+        <div class="filter-group">
+          <button [class.selected]="activeFilter === 'All'"
+            (click)="setFilter('All')">All</button>
+          <button [class.selected]="activeFilter === 'Pending'"
+            (click)="setFilter('Pending')">Pending</button>
+          <button [class.selected]="activeFilter === 'Completed'"
+            (click)="setFilter('Completed')">Done</button>
+        </div>
+      </div>
+
+      <form class="add-task" (submit)="$event.preventDefault(); addTask(taskInput.value); taskInput.value = ''">
+        <input #taskInput type="text"
+          placeholder="✦  What would you like to accomplish?">
+        <button class="add-button" type="submit">+ Add task</button>
+      </form>
+
+      <div class="task-list">
+        @for (task of filteredTasks; track task.id) {
+          <article class="task-row" [class.is-completed]="task.completed">
+            <button class="check-button"
+              [class.checked]="task.completed"
+              (click)="toggleTask(task.id)"
+              [attr.aria-label]="task.completed ? 'Mark as pending' : 'Complete task'">
+              {{ task.completed ? '✓' : '' }}
+            </button>
+
+            <div class="task-info">
+              <strong>{{ task.title }}</strong>
+              <span>{{ task.category }}</span>
+            </div>
+
+            <span class="status" [class.done-status]="task.completed">
+              {{ task.completed ? 'Completed' : 'In progress' }}
+            </span>
+
+            <button class="delete-button"
+              (click)="deleteTask(task.id)"
+              aria-label="Delete task">×</button>
+          </article>
+        } @empty {
+          <div class="empty-state">
+            <div>✦</div>
+            <h3>Nothing here for now</h3>
+            <p>Add a task or choose another filter.</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <footer>Built with focus <span>♥</span> and Angular.</footer>
+  </main>
+</div>
